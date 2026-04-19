@@ -1,0 +1,10 @@
+{
+  "name": "agent-knowledge-base",
+  "version": "1.0.0",
+  "description": "SQLite FTS5 knowledge base CLI for Claude Code agents",
+  "bin": "./kb.js",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "better-sqlite3": "^9.0.0"
+  }
+}
