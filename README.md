@@ -4,6 +4,62 @@ SQLite FTS5 knowledge base for Claude Code agents. Stores domain-specific facts 
 
 > Part of [The Agent Crafting Table](https://github.com/Agent-Crafting-Table) — standalone Claude Code agent components.
 
+## How It Works
+
+```mermaid
+flowchart LR
+    subgraph "Write Path"
+        A["kb.js add title body tags"] --> B[SQLite FTS5
+kb.db]
+        C[Agent solves a problem] -->|save lesson| A
+    end
+
+    subgraph "Read Path"
+        D["kb.js search query"] --> E[FTS5 full-text search
+ranked by relevance]
+        E --> F[Highlighted matches
+returned to agent]
+        G["kb.js list tag"] --> H[Filter by tag
+all entries]
+        I["kb.js get id"] --> J[Full entry JSON]
+    end
+
+    subgraph "Agent Integration"
+        K[CLAUDE.md
+KB lookup rule] --> L{Agent needs info}
+        L -->|topic known| D
+        L -->|no KB hit| M[Agent researches
+then saves to KB]
+        M --> A
+    end
+```
+
+```mermaid
+graph TD
+    subgraph "CLI Commands"
+        C1["add title body tags
+Insert new entry"]
+        C2["search query
+Full-text search with highlights"]
+        C3["list [tag]
+All entries, optionally filtered"]
+        C4["tags
+Tag frequency report"]
+        C5["get id
+Full JSON for one entry"]
+        C6["delete id
+Remove entry"]
+    end
+
+    subgraph "Storage"
+        DB[(kb.db
+SQLite FTS5)]
+        ENV["KB_PATH env var
+default: ./kb.db"]
+        ENV --> DB
+    end
+```
+
 ## Why
 
 Session memory is recent-only. This gives you a persistent, structured reference library that survives restarts, model switches, and context resets — and returns exact matches instead of paraphrases.
